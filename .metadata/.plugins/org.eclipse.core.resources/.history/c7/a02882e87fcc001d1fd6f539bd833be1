@@ -1,0 +1,148 @@
+/**
+ * Title:
+ * Description:
+ * Copyright:    Copyright (c) 2004
+ * Company:
+ * @author: Put in your name
+ * @version 1.0
+ */
+
+public class WorkBoard extends Board {
+	static final int INF = 10000;
+	Move best_move = null;  // Put your best move in here!
+    int start_depth = 0;
+    int totalNodesSearched = 0;
+    int numLeafNodes = 0;
+    boolean stoptime = true;
+    public long searchtime = 0L;
+
+    public WorkBoard() {
+    }
+
+    public WorkBoard(WorkBoard w) {
+	super(w);
+    }
+
+    /**
+     * This is where your board evaluator will go. This function will be called
+     * from min_max
+     *
+     * @return int calculated heuristic value of the board
+     */
+    int h_value() {
+
+  
+      return 0;
+    }
+
+
+    /**
+     * Min-max alpha beta
+     *
+     * @param depth int the depth of the search to conduct
+     * @return maximum heuristic board found value
+     */
+    Move min_max_AB(int depth, int alpha, int beta) {
+      totalNodesSearched++;
+      Move best_move = new Move(0,0,0,0, alpha);
+      Move opponent_move = null;
+      Move best_opponent_move = null;
+      boolean valid = false;
+
+      // This is the complete implementation of negamax with Alpha-Beta
+      //First check if this is a frontier node, maximum depth?
+      if (depth <= 0) {
+        best_move.value = h_value();
+        return best_move; // If so, just return the evaluation of this board.
+      }
+
+      if (connected(opponent(to_move))) { // Is this the end of the game?
+          best_move.value = -(INF+depth);
+          return best_move;
+      }
+      if (connected(to_move)) {
+        best_move.value = (INF+depth);
+        return best_move;
+      }
+
+      Move moves = genMoves();  // Get all valid moves for this board
+
+      // Search the first generated move so that there is something valid in
+      // best_move if we bug out early.
+      makeMove(moves);
+      best_opponent_move = opponent_move = min_max_AB(depth-1, -beta, -alpha);
+      best_move = moves; // This gives a best move in case one is not found in time later.
+      best_move.value = alpha;
+      if (opponent_move != null )
+        best_move.value = -opponent_move.value;
+      reverseMove(moves);
+      moves = moves.next;
+
+      // Iterate through each valid move, trying each one, and calculating results
+        for ( Move m = moves; m != null; m = m.next ) {
+          // Skip the transposition table move because we have already searched it.
+          if ( best_move.value >= beta ) {//this whole node is trash, b/c the opponent won't allow it
+            //history_moves[to_move][best_move.x1][best_move.y1][best_move.x2][best_move.y2] += 1 << depth;
+            return best_move;
+          }
+          makeMove(m);
+          if ( alpha < best_move.value )
+            alpha = best_move.value;
+          Move opponent = min_max_AB(depth-1,-beta, -alpha);
+          int v = -opponent.value;
+          if (v > alpha) {
+              alpha = v;
+              best_move = m;
+              best_move.value = v;
+              best_opponent_move = opponent_move;
+          }
+          reverseMove(m); //Undo the move we just tried.
+      }
+
+      return best_move;
+    }
+       
+    /**
+     * This function is called to perform search. All it does is call min_max.
+     *
+     * @param depth int the depth to conduct search
+     */
+    void bestMove(int depth) {
+      best_move = null;
+      int runningNodeTotal = 0;
+      totalNodesSearched = numLeafNodes = moveCount = 0;
+      start_depth = 1;
+      int i = 1;
+      long startTime = System.currentTimeMillis();
+      long elapsedTime = 0;
+      long currentPeriod = 0;
+      long previousPeriod = 0;
+      stoptime = false;
+
+      while ( i <= depth && !stoptime) {
+        totalNodesSearched = numLeafNodes = moveCount = 0;
+        start_depth = i;
+
+        best_move = min_max_AB(i, -INF, INF); // Min-Max alpha beta
+
+        elapsedTime = System.currentTimeMillis()-startTime;
+        currentPeriod = elapsedTime-previousPeriod;
+        double rate = 0;
+        if ( i > 3 && previousPeriod > 50 )
+          rate = (currentPeriod - previousPeriod)/previousPeriod;
+
+        runningNodeTotal += totalNodesSearched;
+        System.out.println("Depth: " + i +" Time: " + elapsedTime/1000.0 + " Nodes Searched: " + totalNodesSearched + " Leaf Nodes: " + numLeafNodes);
+
+        // increment indexes;
+        i++;
+        if ( (elapsedTime+(rate+1.0)*currentPeriod) > searchtime )
+          stoptime = true;
+      }
+
+      System.out.println("Nodes per Second = " + runningNodeTotal/(elapsedTime/1000.0));
+      if (best_move == null  || best_move.piece == null) {
+        throw new Error ("No Move Available - Search Error!");
+      }
+    }
+}

@@ -1,0 +1,65 @@
+/**
+ * Title:
+ * Description:
+ * Copyright:    Copyright (c) 2004
+ * Company:
+ * @author: Put in your name
+ * @version 1.0
+ */
+
+public class WorkBoard extends Board {
+	static final int INF = 10000;
+	Move best_move = null;  // Put your best move in here!
+    int start_depth = 0;
+    int totalNodesSearched = 0;
+    int numLeafNodes = 0;
+    boolean stoptime = true;
+    public long searchtime = 0L;
+
+    public WorkBoard() {
+    }
+
+    public WorkBoard(WorkBoard w) {
+	super(w);
+    }
+
+    /**
+     * This is where your board evaluator will go. This function will be called
+     * from min_max
+     *
+     * @return int calculated heuristic value of the board
+     */
+    int h_value() {
+
+  
+      return 0;
+    }
+
+
+    /**
+     * This is where you will write min-max alpha-beta search. Note that the
+     * Board class maintains a predecessor, so you don't have to deal with
+     * keeping up with dynamic memory allocation.
+     * The function takes the search depth, and returns the maximum value from
+     * the search tree given the board and depth.
+     *
+     * @parama depth int the depth of the search to conduct
+     * @return maximum heuristic board found value
+     */
+    Move min_max_AB(int depth, int alpha, int beta) {
+      return null;
+    }
+       
+    /**
+     * This function is called to perform search. All it does is call min_max.
+     *
+     * @param depth int the depth to conduct search
+     */
+    void bestMove(int depth) {
+      best_move = null;
+      best_move = min_max_AB(depth, -INF, INF); // Min-Max alpha beta
+      if (best_move == null  || best_move.piece == null) {
+        throw new Error ("No Move Available - Search Error!");
+      }
+    }
+}

@@ -1,0 +1,14 @@
+INDEX VERSION 1.121+F:\My Documents\Teaching\CSCE523\InTheFolder\StudentLOA\.metadata\.plugins\org.eclipse.jdt.core
+1590043357.index
+3977662550.index
+2174496293.index
+3962297380.index
+3309190023.index
+960988395.index
+4072971665.index
+369939363.index
+4160647193.index
+1066788987.index
+2828031126.index
+1375628931.index
+468709615.index

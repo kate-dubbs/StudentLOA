@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 1 element(s) from project &apos;LOAClient&apos;&#x0D;&#x0A;- Original project: &apos;LOAClient&apos;&#x0D;&#x0A;- Original element: &apos;zobrist.hsh&apos;" description="Delete element" element1="zobrist.hsh" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="1" stamp="1229548811251" subPackages="false" version="1.0"/>
+</session>
